@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
+import reducers from './reducers'
 
 const getBear = () => {
 	try {
@@ -12,24 +13,10 @@ const getBear = () => {
 }
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
-//reducer specify how state changed in respond to action
-//Ex a pure function that take the previous state and an action then give the next state
-//action are payload of information send from app to store, is store only 
-//source of information, send using dispatch(store.dispatch() or use libraly)
-let bearReducer = function(state = [], action){
-	if(action){
-		if(action.type == 'FETCH_BEAR'){
-			//action type specify how to react
-			return action.payload
-		}
-	}
-	return state
-}
 
-//combineReducer is a function that help select a reducer accord to their keys
-let store = createStoreWithMiddleware(combineReducers({
-	bear: bearReducer
-}))
+
+//import reducers from separate file
+let store = createStoreWithMiddleware(reducers)
 
 //action creator is function that create action, can see from dispatch
 //in the function which is what use to send action to store

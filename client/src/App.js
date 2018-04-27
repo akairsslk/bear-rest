@@ -3,14 +3,7 @@ import axios from 'axios';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import reducers from './reducers'
-
-const getBear = () => {
-	try {
-		return axios.get('http://localhost:8000/api/bears')
-	} catch (error){
-		console.error(error);
-	}
-}
+import { fetchBear} from './actions';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 
@@ -18,16 +11,7 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 //import reducers from separate file
 let store = createStoreWithMiddleware(reducers)
 
-//action creator is function that create action, can see from dispatch
-//in the function which is what use to send action to store
-let fetchBearActionCreator = function(){
-	return (dispatch) => {
-		getBear()
-		.then(result => {
-			dispatch({type: 'FETCH_BEAR', payload: result.data})
-		})
-	}
-}
+
 class App extends Component {
 	constructor()
 	{
@@ -45,7 +29,7 @@ class App extends Component {
 			//need to give keys so the combineReducer can select the correct reducer
 			this.setState({data: store.getState().bear})
 		})
-		store.dispatch(fetchBearActionCreator());
+		store.dispatch(fetchBear());
 	}
 	
 	render() {
